@@ -1,7 +1,7 @@
 import cors from "cors";
 import express from "express";
 import multer from "multer";
-import { listarPosts, postarNovoPost, uploadImagem, atualizarNovoPost } from "../controllers/postsController.js";
+import { listarPosts, postarNovoPost, uploadImagem, atualizarNovoPost, deletarNovoPost} from "../controllers/postsController.js";
 
 const corsOptions = {
     origin: "http://localhost:8000",
@@ -23,6 +23,7 @@ const upload = multer({dest: "./uploads", storage})
 const routes = (app) => {
     // Habilita o parsing de JSON no corpo das requisições
     app.use(express.json());
+    //Cors
     app.use(cors(corsOptions));
     // Define uma rota GET para obter todos os posts
     app.get("/posts", listarPosts);
@@ -32,6 +33,8 @@ const routes = (app) => {
     app.post("/upload", upload.single("imagem"), uploadImagem);
     //Define uma rota PUT para atualizar um post
     app.put("/upload/:id", atualizarNovoPost)
+    //Define uma rota DELETE para apagar um post
+    app.delete("/posts/:id", deletarNovoPost)
 }
 
 export default routes;

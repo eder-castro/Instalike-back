@@ -1,4 +1,4 @@
-import { getTodosPosts, criarPost, atualizarPost } from "../models/postsModel.js";
+import { getTodosPosts, criarPost, atualizarPost, deletarPost} from "../models/postsModel.js";
 import fs from "fs";
 import gerarDescricaoComGemini from "../services/geminiService.js"
 
@@ -55,5 +55,27 @@ export async function atualizarNovoPost (req, res) {
     } catch (erro) {
         console.error(erro.message);
         res.status(500).json({"Erro":"Falha na requisição"});
+    }
+}
+
+// Adicione esta nova função no postsController.js
+export async function deletarNovoPost(req, res) {
+    const id = req.params.id;
+    try {
+        const resultado = await deletarPost(id);
+        if (resultado.deletedCount === 0) {
+            res.status(404).json({"Erro": "Post não encontrado"});
+            return;
+        }
+        // Se houver uma imagem associada, também a deletamos
+        try {
+            fs.unlinkSync(`uploads/${id}.png`);
+        } catch (erro) {
+            console.log("Imagem não encontrada ou já deletada");
+        }
+        res.status(200).json({"mensagem": "Post deletado com sucesso"});
+    } catch (erro) {
+        console.error(erro.message);
+        res.status(500).json({"Erro": "Falha na requisição"});
     }
 }

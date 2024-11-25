@@ -33,3 +33,11 @@ export async function atualizarPost(id, novoPost) {
     const objId = ObjectId.createFromHexString(id)
     return colecao.updateOne({_id: new ObjectId(objId)},{$set: novoPost})
 }
+
+// Função para deletar um post por ID
+export async function deletarPost(id) {
+    const db = conexao.db("imersao-instabytes")
+    const colecao = db.collection("posts")
+    const objId = ObjectId.createFromHexString(id)
+    return colecao.deleteOne({_id: new ObjectId(objId)})
+}
